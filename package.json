@@ -1,0 +1,13 @@
+{
+  "name": "femfx-relay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Matchmaking relay for the FEMFX house multiplayer demo (zero dependencies).",
+  "main": "relay.js",
+  "scripts": {
+    "start": "node relay.js"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
