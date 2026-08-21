@@ -28,16 +28,12 @@
 //
 // DEPLOYING
 // ---------
+// * fly.io (CURRENT public deployment): see relay/DEPLOY.md. Fly terminates
+//   TLS at the edge; the endpoint is wss://relayfx.fly.dev. Keep exactly one
+//   machine -- rooms live in this process's memory.
 // * Any VPS / your own PC:      node relay.js            (plain ws:// on :8080)
-// * fly.io:                     works over ws:// port 80 (HTTP at their edge)
-// * Render / Glitch:            they terminate TLS and force HTTPS, so the
-//                               PUBLIC endpoint is wss://<app>.onrender.com.
-//                               The game client speaks wss:// natively since
-//                               the Schannel TLS layer landed (TlsClient.h);
-//                               no TLS terminator is needed in front anymore.
-//                               Deploy steps are in relay/RENDER.md.
 //
-// The game defaults to ws://localhost:8080; pass --relay to the viewer to
+// The game defaults to wss://relayfx.fly.dev; pass --relay to the viewer to
 // point it somewhere else.
 // ============================================================================
 
