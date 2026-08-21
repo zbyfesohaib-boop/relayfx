@@ -87,7 +87,11 @@ class WsConn {
     constructor(socket) {
         this.socket = socket;
         this.buf = Buffer.alloc(0);
-        this.alive = false;          // pong received since last ping?
+        // Optimistic until proven dead: the heartbeat only terminates a
+        // connection after it has failed to answer a FULL ping cycle. Starting
+        // at false here would kill every socket at its very first heartbeat
+        // tick, before it ever had a ping to answer.
+        this.alive = true;
         this.onMessage = null;       // (opcode: 'text'|'binary', payload: Buffer)
         this.onClose = null;
         socket.setNoDelay(true);
@@ -316,6 +320,9 @@ server.on('upgrade', (req, socket) => {
 });
 
 // Heartbeat: kill half-open connections (laptops asleep, cables pulled).
+// Each cycle: a connection that answered the previous ping stays, gets marked
+// unanswered and is pinged; one that missed the ping is closed. A healthy
+// socket therefore always has ~30s to answer -- never an impossible deadline.
 setInterval(() => {
     const seen = new Set();
     for (const [, room] of rooms) {
